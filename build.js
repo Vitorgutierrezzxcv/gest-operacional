@@ -7,10 +7,18 @@ const parts = [0,1,2,3,4].map(i => fs.readFileSync(path.join(src, `part-${i}.b64
 const compressed = Buffer.from(parts.join(''), 'base64');
 const sourceHtml = zlib.gunzipSync(compressed).toString('utf8');
 
-const overridesPath = path.join(src, 'responsive-v3.css');
-const responsiveOverrides = fs.existsSync(overridesPath)
-  ? fs.readFileSync(overridesPath, 'utf8').trim()
-  : '';
+const overrideFiles = [
+  'responsive-v3.css',
+  'cilo-design-v5.css',
+];
+
+const responsiveOverrides = overrideFiles
+  .map(file => {
+    const filePath = path.join(src, file);
+    return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8').trim() : '';
+  })
+  .filter(Boolean)
+  .join('\n\n');
 
 const html = responsiveOverrides
   ? sourceHtml.replace('</style>', `\n${responsiveOverrides}\n</style>`)
