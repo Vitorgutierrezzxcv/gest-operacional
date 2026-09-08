@@ -10,6 +10,14 @@ const sourceHtml = zlib.gunzipSync(compressed).toString('utf8');
 const overrideFiles = [
   'responsive-v3.css',
   'cilo-design-v5.css',
+  'cilo-v6-0.css',
+  'cilo-v6-1.css',
+  'cilo-v6-2.css',
+  'cilo-v6-3.css',
+  'cilo-v6-4.css',
+  'cilo-v6-5.css',
+  'cilo-v6-6.css',
+  'cilo-v6-7.css',
 ];
 
 const responsiveOverrides = overrideFiles
@@ -20,9 +28,15 @@ const responsiveOverrides = overrideFiles
   .filter(Boolean)
   .join('\n\n');
 
-const html = responsiveOverrides
+let html = responsiveOverrides
   ? sourceHtml.replace('</style>', `\n${responsiveOverrides}\n</style>`)
   : sourceHtml;
+
+const runtimeFile = path.join(src, 'cilo-design-v6.js');
+if (fs.existsSync(runtimeFile)) {
+  const runtime = fs.readFileSync(runtimeFile, 'utf8').trim();
+  html = html.replace('</body>', `<script>\n${runtime}\n</script>\n</body>`);
+}
 
 const out = path.join(__dirname, 'dist');
 fs.rmSync(out, { recursive: true, force: true });
