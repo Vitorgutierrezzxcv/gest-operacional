@@ -19,6 +19,10 @@ const overrideFiles = [
   'cilo-v6-6.css',
   'cilo-v6-7.css',
   'cilo-design-v7.css',
+  'v8-shell.css',
+  'v8-tasks.css',
+  'v8-plan.css',
+  'v8-responsive.css',
 ];
 
 const responsiveOverrides = overrideFiles
@@ -33,9 +37,16 @@ let html = responsiveOverrides
   ? sourceHtml.replace('</style>', `\n${responsiveOverrides}\n</style>`)
   : sourceHtml;
 
-const runtimeFile = path.join(src, 'cilo-design-v6.js');
-if (fs.existsSync(runtimeFile)) {
-  const runtime = fs.readFileSync(runtimeFile, 'utf8').trim();
+const runtimeFiles = ['cilo-design-v6.js', 'cilo-design-v8.js'];
+const runtime = runtimeFiles
+  .map(file => {
+    const filePath = path.join(src, file);
+    return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8').trim() : '';
+  })
+  .filter(Boolean)
+  .join('\n\n');
+
+if (runtime) {
   html = html.replace('</body>', `<script>\n${runtime}\n</script>\n</body>`);
 }
 
