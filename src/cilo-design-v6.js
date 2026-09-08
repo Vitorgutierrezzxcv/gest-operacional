@@ -19,7 +19,7 @@
     label.className='brand-context';
     label.setAttribute('aria-label','Marca ativa');
     label.innerHTML='<span class="brand-context-label">Marca</span>';
-    label.appendChild(select); // moving preserves all legacy listeners
+    label.appendChild(select);
     toolbar.prepend(label);
   }
 
@@ -60,10 +60,13 @@
   function enhanceWeek(){
     const days=qsa('.cu-week .cu-day');
     if(days.length){
+      const dayNames=['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
       days.forEach((day,i)=>{
-        day.classList.toggle('today',i===1); // Sep 8, 2026 is Tuesday
+        day.classList.toggle('today',i===1);
         const head=qs('.cu-day-head',day);if(!head)return;
         const left=qs(':scope > div',head);if(left&&!left.classList.contains('cu-day-date'))left.classList.add('cu-day-date');
+        const dayName=left?.querySelector('b'); if(dayName) dayName.textContent=dayNames[i]||dayName.textContent;
+        const dayDate=left?.querySelector('span'); if(dayDate) dayDate.textContent=dayDate.textContent.replace('/09',' · set');
         let right=qs('.cu-day-head-right',head);
         if(!right){right=document.createElement('div');right.className='cu-day-head-right';head.appendChild(right)}
         const oldToday=qs(':scope > em',head);if(oldToday)oldToday.remove();
