@@ -18,6 +18,7 @@ const overrideFiles = [
   'cilo-v6-5.css',
   'cilo-v6-6.css',
   'cilo-v6-7.css',
+  'cilo-design-v7.css',
 ];
 
 const responsiveOverrides = overrideFiles
